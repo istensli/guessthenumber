@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess the number</title>
+    <style>
+
+    </style>
+</head>
+<body>
+    <div id="page">
+        <h1>Gjett tallet</h1>
+        <p>Gjett et tall fom. 1 tom. 10</p>
+        <input type="number" id="number-input" min="10" max="100">
+        <button onclick="guess()" id="guess-button">Gjett</button>
+        <button onclick="resetButton()">Reset</button>
+        <div id="output-div"></div>
+    </div>
+
+
+    <script>
+        //model
+        let inputNumber = 0;
+        let chosenNumber = 0;
+        let hasGuessedCorrectly = true;
+        let isLessThan = false;
+        let isGreaterThan = false;
+
+        let numberInput = document.getElementById('number-input');
+        let outputDiv = document.getElementById('output-div');
+        let timeout;
+        let blink;
+        let blinkState = 0;
+        //let state = 0;
+
+
+        //controller
+        function guess(){
+            if(hasGuessedCorrectly){
+                chosenNumber = getRandomNumber();
+                console.log(chosenNumber);
+
+            }
+            hasGuessedCorrectly = false;
+
+            inputNumber = parseInt(numberInput.value);
+            if (inputNumber == chosenNumber) hasGuessedCorrectly = true;
+            else if (inputNumber < chosenNumber) isLessThan = true;
+            else if (inputNumber > chosenNumber) isGreaterThan = true;
+            else{
+                console.log('error..');
+            }
+            
+
+            showOutput();
+
+
+
+        }
+
+
+
+        //view
+        function showOutput(){
+            let outputDiv = document.getElementById('output-div');
+            let html = "";
+            if(hasGuessedCorrectly){
+                html =  /*HTML*/`<p>Tallet du gjettet var riktig!</p>`;
+                makeStyleFancy();
+                startBlink();
+
+            }
+            else if(isLessThan){
+                html =  /*HTML*/`<p>Tallet du gjettet var mindre enn det valgte tallet!</p>`;
+            }
+            else if(isGreaterThan){
+                html =  /*HTML*/`<p>Tallet du gjettet var større enn det valgte tallet!</p>`;
+            }
+            outputDiv.innerHTML = html;
+
+        }
+
+
+        function makeStyleFancy(){
+            
+            outputDiv.style.height = '120px';
+            outputDiv.style.width = '400px';
+            outputDiv.style.backgroundColor = 'grey';
+            outputDiv.style.fontSize = '50px';
+            outputDiv.style.textAlign = 'center';   
+            outputDiv.style.textJustify = 'auto';    
+            outputDiv.style.verticalAlign = 'middle';   
+            
+
+
+
+        }
+
+        function makeBlink(){
+            if(blinkState == 0) outputDiv.style.backgroundColor = 'grey';
+            if(blinkState == 1) outputDiv.style.backgroundColor = 'red';
+            if(blinkState == 2) outputDiv.style.backgroundColor = 'green';
+            if(blinkState == 3) outputDiv.style.backgroundColor = 'blue';
+
+            blinkState++;
+            if(blinkState > 3) blinkState = 0;
+            timeout = setTimeout(makeBlink, 500);
+        }
+
+        //kjøres ved riktig svar
+        function startBlink(){
+            if(!blink){
+                blink = 1;
+                makeBlink();
+            }
+            
+           
+        }
+        //kjøres ved en reset
+        function stop(){
+            clearTimeout(timeout);
+            blink = 0;
+        }
+
+        function resetButton(){
+            stop();
+            blinkState = 0;
+            outputDiv.style.backgroundColor = 'white';
+            let inputNumber = 0;
+            let chosenNumber = 0;
+            let hasGuessedCorrectly = true;
+            let isLessThan = false;
+            let isGreaterThan = false;
+            
+
+
+
+        }
+
+
+
+
+
+        function getRandomNumber(){
+            return Math.floor(Math.random() * 10 + 1);
+
+        }
+
+
+
+
+
+    </script>
+    
+</body>
+</html>
